@@ -1,0 +1,40 @@
+services:
+  - type: web
+    name: codeforge-store
+    runtime: node
+    plan: starter
+    region: singapore
+    buildCommand: bun install && NITRO_PRESET=node-server bun run build
+    startCommand: node .output/server/index.mjs
+    healthCheckPath: /
+    envVars:
+      - key: NODE_VERSION
+        value: "20"
+      - key: NITRO_PRESET
+        value: node-server
+      - key: PORT
+        value: "10000"
+      # ---- Public (safe to expose to the browser) ----
+      - key: VITE_SUPABASE_URL
+        sync: false
+      - key: VITE_SUPABASE_PUBLISHABLE_KEY
+        sync: false
+      - key: VITE_SUPABASE_PROJECT_ID
+        sync: false
+      # ---- Server-only (mirror the VITE_* values, no VITE_ prefix) ----
+      - key: SUPABASE_URL
+        sync: false
+      - key: SUPABASE_PUBLISHABLE_KEY
+        sync: false
+      - key: SUPABASE_SERVICE_ROLE_KEY
+        sync: false
+      # ---- Razorpay (LIVE keys when you go live) ----
+      - key: RAZORPAY_KEY_ID
+        sync: false
+      - key: RAZORPAY_KEY_SECRET
+        sync: false
+      - key: RAZORPAY_WEBHOOK_SECRET
+        sync: false
+      # ---- Lovable AI (optional, only if your app uses it) ----
+      - key: LOVABLE_API_KEY
+        sync: false
